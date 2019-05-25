@@ -12,3 +12,6 @@ make
 
 Test:
 make test
+
+Windows Build:
+nmake -f NMakefile [test]
