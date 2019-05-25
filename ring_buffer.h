@@ -10,7 +10,7 @@ extern "C" {
 
 struct ring_buffer
 {
-	struct ring_buffer_ops* ops;
+    struct ring_buffer_ops* ops;
     size_t  capacity;
     size_t  count;
     size_t  put_index;
@@ -35,21 +35,21 @@ int ring_buffer_get(struct ring_buffer* rb, void* data);
  *  Trivial queries / operations imlemented inline
  */
 inline size_t ring_buffer_size(const struct ring_buffer* rb) {
-	return rb->count;
+    return rb->count;
 }
 inline size_t ring_buffer_capacity(const struct ring_buffer* rb) {
-	return rb->capacity;
+    return rb->capacity;
 }
 inline bool ring_buffer_empty(const struct ring_buffer* rb) {
-	return rb->count == 0;
+    return rb->count == 0;
 }
 inline bool ring_buffer_full(const struct ring_buffer* rb) {
-	return rb->count == rb->capacity;
+    return rb->count == rb->capacity;
 }
 inline void ring_buffer_reset(struct ring_buffer* rb) {
-	rb->count = 0;
-	rb->put_index = 0;
-	rb->get_index = 0;
+    rb->count = 0;
+    rb->put_index = 0;
+    rb->get_index = 0;
 }
 
 
