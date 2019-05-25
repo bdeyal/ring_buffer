@@ -109,16 +109,30 @@ void test_file_copy()
     srand(time(NULL));
 
     rb = ring_buffer_create(RB_SIZE, sizeof(char));
-    assert(rb != NULL);
+    if (!rb) {
+        perror("Failed to create ring buffer");
+        exit(1);
+    }
 
+#if defined (_WIN32)
+    fname_in = __FILE__;
+    fname_out = "src_copy.c.txt";
+#else
     fname_in = "/usr/share/dict/words";
     fname_out = "/tmp/words_copy";
+#endif
 
     fin = fopen(fname_in, "r");
-    assert(fin != NULL);
+    if (!fin) {
+        perror(fname_in);
+        exit(1);
+    }
 
     fout = fopen(fname_out, "w");
-    assert(fout != NULL);
+    if (!fout) {
+        perror(fname_out);
+        exit(1);
+    }
 
     for (;;) {
         num_to_put = 1 + (rand() % RB_SIZE);
@@ -151,16 +165,21 @@ void test_file_copy()
     fclose(fout);
     ring_buffer_destroy(rb);
 
+#if defined (_WIN32)
+    snprintf(diff_cmd, sizeof diff_cmd, "fc \"%s\" \"%s\"", fname_in, fname_out);
+#else
     snprintf(diff_cmd, sizeof diff_cmd, "diff -s \"%s\" \"%s\"", fname_in, fname_out);
+#endif
     puts(diff_cmd);
     rc = system(diff_cmd);
-    assert(rc == 0);
+    if (rc != 0)
+        exit(1);
 }
 
 
 int main()
 {
-    printf("Sizeof rb = %lu\n", sizeof(struct ring_buffer));
+    printf("Sizeof rb = %lu\n", (unsigned long) sizeof(struct ring_buffer));
     test_full_empty();
     test_continuous();
     test_file_copy();
