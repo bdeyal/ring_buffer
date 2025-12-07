@@ -212,7 +212,7 @@ int ring_buffer_get(struct ring_buffer* rb, void* data)
     }
 
     if (ring_buffer_empty(rb)) {
-        errno = ENODATA;
+        errno = EINVAL;
         return -1;
     }
 
